@@ -1,55 +1,68 @@
-import java.util.Random;
+/*
+* This class
+* */
+//TODO create solvable boolean that checks is the maze is solvable (YAY)
 
 public class Maze {
-    private boolean[][] horizontal;
-    private boolean[][] vertical;
-    private Random r = new Random();
+    private Graph maze;
     private int bound;
 
-
-    public Maze(int a){
-        bound = a;
-        generateMaze();
+    public Maze(int bound){
+        this.bound = bound;
+        maze = new Graph(bound);
+        spit();
     }
 
-    public void generateMaze(){
-        horizontal = new boolean[bound][bound];
-        for(int i = 0; i<bound; i++){
-            for(int j =0; j<bound; j++){
-                horizontal[i][j] =r.nextBoolean();
-
-            }
+    public void spit(){
+        for (int i = 0; i < maze.getEdges().size(); i++) {
+            System.out.println("start:" + maze.getEdges().get(i).getStart());
+            System.out.println("end:" + maze.getEdges().get(i).getEnd());
+            System.out.println("weight:" + maze.getEdges().get(i).getWeight());
         }
-        horizontal[0][0] = true;
-        horizontal[bound-1][bound-1]=true;
-
-        vertical = new boolean[bound][bound];
-        for(int i = 0; i<bound; i++){
-            for(int j =0; j<bound; j++){
-                vertical[i][j] =r.nextBoolean();
-            }
-        }
-        vertical[0][0] = false;
-        vertical[bound-1][bound-1]=false;
     }
+
+//    public boolean solvable(){}
 
     public void displayMaze(){
-        for(int i = 0; i<bound; i++){
-            for(int j =0; j<bound; j++){
-                if(vertical[i][j]==true) {
-                    System.out.print("|");
-                }
-                else if(horizontal[i][j]==false) {
-                    System.out.print(" ");
-                }
-                if(horizontal[i][j]==true) {
-                    System.out.print("_");
-                }
-                else if(horizontal[i][j]==false) {
-                    System.out.print(" ");
-                }
+        String display = "";
+        for(int b = 0; b<bound; b++) {
+            for (int p = 0; p < bound; p++) {
+                System.out.print(maze.getHorizontal().getBlocks()[b][p]);
             }
             System.out.println();
         }
+        System.out.println();
+        for(int b = 0; b<bound; b++){
+            for (int p = 0; p < bound; p++) {
+                System.out.print(maze.getVertical().getBlocks()[b][p]);
+            }
+            System.out.println();
+        }
+
+        for(int k =0; k<bound; k++){
+            display += String.format("%1c"+"%1c",' ','_');
+        }
+        display += String.format("\n");
+        for(int i = 0; i<bound; i++){
+            for(int j =0; j<bound; j++){
+                if(j==0){
+                    display += String.format("|");
+                }
+                if(maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
+                    display += String.format("%1c"+"%1c",'_','|');
+                }
+                else if(maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
+                    display += String.format("%1c"+"%1c",'_',' ');
+               }
+                else if(!maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
+                    display += String.format("%1c"+"%1c",' ','|');
+                }
+                else if(!maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
+                    display += String.format("%1c"+"%1c",' ',' ');
+                }
+            }
+            display += String.format("\n");
+        }
+        System.out.println(display);
     }
 }

@@ -1,9 +1,13 @@
+/*
+*
+* */
+
 import java.util.*;
 
 public class MazeToTheMax {
 
     private int bound;
-    private int levelNum = 4;
+    private int levelNum = 2;
     private boolean pass = true;
     private Random r = new Random();
     private Maze level;
