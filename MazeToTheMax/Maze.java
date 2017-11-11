@@ -59,6 +59,8 @@ public class Maze {
     //formats a maze display and prints
     public void displayMaze(){
         String display = "";
+        String hLine = "";
+        String vLine = "";
 //        for(int b = 0; b<bound; b++) {
 //            for (int p = 0; p < bound; p++) {
 //                System.out.print(maze.getHorizontal().getBlocks()[b][p]);
@@ -74,28 +76,56 @@ public class Maze {
 //        }
 
         for(int k =0; k<bound; k++){
-            display += String.format("%1c"+"%1c",' ','_');
+            //display += String.format("%1c"+"%1c",' ','_');
+            display += " ---";
         }
         display += String.format("\n");
         for(int i = 0; i<bound; i++){
             for(int j =0; j<bound; j++){
+//                if(j==0){
+//                    display += String.format("|");
+//                }
+//                if(maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
+//                    display += String.format("%1c"+"%1c",'_','|');
+//                }
+//                else if(maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
+//                    display += String.format("%1c"+"%1c",'_',' ');
+//               }
+//                else if(!maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
+//                    display += String.format("%1c"+"%1c",' ','|');
+//                }
+//                else if(!maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
+//                    display += String.format("%1c"+"%1c",' ',' ');
+//                }
+
+/////////////////////////////////////
+//new larger maze display
                 if(j==0){
                     display += String.format("|");
                 }
                 if(maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
-                    display += String.format("%1c"+"%1c",'_','|');
+                    vLine += "   |";
+                    hLine += " ---";
                 }
                 else if(maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
-                    display += String.format("%1c"+"%1c",'_',' ');
+                    vLine += "    ";
+                    hLine += " ---";
                }
                 else if(!maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
-                    display += String.format("%1c"+"%1c",' ','|');
+                    vLine += "   |";
+                    hLine += "    ";
                 }
                 else if(!maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
-                    display += String.format("%1c"+"%1c",' ',' ');
+                    vLine += "    ";
+                    hLine += "    ";
                 }
+
             }
-            display += String.format("\n");
+            display += vLine + "\n";
+            display += hLine + "\n";
+            vLine = "";
+            hLine = "";
+            //display += String.format("\n");
         }
         System.out.println(display);
     }
