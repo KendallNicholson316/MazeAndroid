@@ -1,30 +1,69 @@
 /*
-* This class
+* This class creates a graph that serves as the maze, maze is just random, so to find
+* a solvable maze the solvable boolean serves as a recursive method to do so  and to then
+* display the maze the display function will format a string output
 * */
-//TODO create solvable boolean that checks is the maze is solvable (YAY)
+
+import java.util.ArrayList;
 
 public class Maze {
     private Graph maze;
     private int bound;
+    private int current;
+    private int end;
 
     public Maze(int bound){
         this.bound = bound;
         maze = new Graph(bound);
-        spit();
+        System.out.println("num edges at construct: "+maze.getEdges().size());
+        System.out.println("valid edges at construct: " + maze.getValidEdges().size());
+        current = 0;
+        end = (bound*bound)-1;
     }
 
-    public void spit(){
-        for (int i = 0; i < maze.getEdges().size(); i++) {
-            System.out.println("start:" + maze.getEdges().get(i).getStart());
-            System.out.println("end:" + maze.getEdges().get(i).getEnd());
-            System.out.println("weight:" + maze.getEdges().get(i).getWeight());
+    //used for tracking solvable when testing
+    public void spit(ArrayList<Edge> stuff){
+        for (int i = 0; i < stuff.size(); i++) {
+            System.out.println("start:" + stuff.get(i).getStart());
+            System.out.println("end:" + stuff.get(i).getEnd());
+            System.out.println("weight:" + stuff.get(i).getWeight());
+            System.out.println("block:" + stuff.get(i).getBlock());
         }
     }
 
-//    public boolean solvable(){}
+    //uses recursion to find if maze if solvable
+    //outputs true if it can reach end
+    //outputs false it end cannot be reached
+    public boolean solvable() {
+        int index;
+        ArrayList<Edge> duplicate = maze.getValidEdges();
+        ArrayList<Edge> options = maze.getOptions(duplicate,current);
+        while (options.size() > 0) {
+            //for testing
+            //spit(options);
+            index = maze.lightest(options);
+            duplicate.remove(options.get(index));
 
+            if (options.get(index).getEnd() == end) {
+                return true;
+            }
+            else {
+                current = options.get(index).getEnd();
+                options.remove(options.get(index));
+                return solvable();
+            }
+
+        }
+        //System.out.println("C'est impossible");
+        return false;
+    }
+
+    //formats a maze display and prints
     public void displayMaze(){
+        System.out.println("num edges at display : "+maze.getEdges().size());
         String display = "";
+        String hLine = "";
+        String vLine = "";
         for(int b = 0; b<bound; b++) {
             for (int p = 0; p < bound; p++) {
                 System.out.print(maze.getHorizontal().getBlocks()[b][p]);
@@ -40,29 +79,58 @@ public class Maze {
         }
 
         for(int k =0; k<bound; k++){
-            display += String.format("%1c"+"%1c",' ','_');
+            //display += String.format("%1c"+"%1c",' ','_');
+            display += " ---";
         }
         display += String.format("\n");
         for(int i = 0; i<bound; i++){
             for(int j =0; j<bound; j++){
+//                if(j==0){
+//                    display += String.format("|");
+//                }
+//                if(maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
+//                    display += String.format("%1c"+"%1c",'_','|');
+//                }
+//                else if(maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
+//                    display += String.format("%1c"+"%1c",'_',' ');
+//               }
+//                else if(!maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
+//                    display += String.format("%1c"+"%1c",' ','|');
+//                }
+//                else if(!maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
+//                    display += String.format("%1c"+"%1c",' ',' ');
+//                }
+
+/////////////////////////////////////
+//new larger maze display
                 if(j==0){
                     display += String.format("|");
                 }
                 if(maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
-                    display += String.format("%1c"+"%1c",'_','|');
+                    vLine += "   |";
+                    hLine += " ---";
                 }
                 else if(maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
-                    display += String.format("%1c"+"%1c",'_',' ');
+                    vLine += "    ";
+                    hLine += " ---";
                }
                 else if(!maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
-                    display += String.format("%1c"+"%1c",' ','|');
+                    vLine += "   |";
+                    hLine += "    ";
                 }
                 else if(!maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
-                    display += String.format("%1c"+"%1c",' ',' ');
+                    vLine += "    ";
+                    hLine += "    ";
                 }
+
             }
-            display += String.format("\n");
+            display += vLine + "\n";
+            display += hLine + "\n";
+            vLine = "";
+            hLine = "";
+            //display += String.format("\n");
         }
         System.out.println(display);
+        //System.out.println("woah");
     }
 }
