@@ -29,7 +29,7 @@ public class MazeToTheMax {
 * to help with the lag when finding solvable mazes of large bounds
 * */
     public void levelUp(){//dictates maze bounds or level
-        while(pass && bound<10){
+        while(pass){
             System.out.println("THIS IS LEVEL " + levelNum + "!!!");
             System.out.println("bound: " + bound);
             level = new Maze(bound);
