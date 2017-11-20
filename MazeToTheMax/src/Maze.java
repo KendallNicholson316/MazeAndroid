@@ -8,16 +8,20 @@ import java.util.ArrayList;
 
 public class Maze {
     private Graph maze;
+    private Graph fancyMaze;
     private int bound;
     private int current;
     private int end;
+    private int initial = 0;
 
     public Maze(int bound){
         this.bound = bound;
         maze = new Graph(bound);
+        fancyMaze = maze;
         System.out.println("num edges at construct: "+maze.getEdges().size());
         System.out.println("valid edges at construct: " + maze.getValidEdges().size());
         current = 0;
+        //start = 0;
         end = (bound*bound)-1;
     }
 
@@ -29,6 +33,20 @@ public class Maze {
             System.out.println("weight:" + stuff.get(i).getWeight());
             System.out.println("block:" + stuff.get(i).getBlock());
         }
+    }
+
+    //for game play
+    public boolean play(int move){
+        int nextLoc = initial+move;
+        if(nextLoc >= 0 && nextLoc < (bound*bound)){
+            if(!maze.findBlock(initial,nextLoc)){
+                initial = nextLoc;
+                if(initial == end){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     //uses recursion to find if maze if solvable
@@ -61,22 +79,24 @@ public class Maze {
     //formats a maze display and prints
     public void displayMaze(){
         System.out.println("num edges at display : "+maze.getEdges().size());
+        System.out.println("fancy num edges at display : "+fancyMaze.getEdges().size());
+        System.out.println(initial);
         String display = "";
         String hLine = "";
         String vLine = "";
-        for(int b = 0; b<bound; b++) {
-            for (int p = 0; p < bound; p++) {
-                System.out.print(maze.getHorizontal().getBlocks()[b][p]);
-            }
-            System.out.println();
-        }
-        System.out.println();
-        for(int b = 0; b<bound; b++){
-            for (int p = 0; p < bound; p++) {
-                System.out.print(maze.getVertical().getBlocks()[b][p]);
-            }
-            System.out.println();
-        }
+//        for(int b = 0; b<bound; b++) {
+//            for (int p = 0; p < bound; p++) {
+//                System.out.print(maze.getHorizontal().getBlocks()[b][p]);
+//            }
+//            System.out.println();
+//        }
+//        System.out.println();
+//        for(int b = 0; b<bound; b++){
+//            for (int p = 0; p < bound; p++) {
+//                System.out.print(maze.getVertical().getBlocks()[b][p]);
+//            }
+//            System.out.println();
+//        }
 
         for(int k =0; k<bound; k++){
             //display += String.format("%1c"+"%1c",' ','_');
@@ -107,20 +127,44 @@ public class Maze {
                     display += String.format("|");
                 }
                 if(maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
-                    vLine += "   |";
-                    hLine += " ---";
+                    if(i == initial/bound && j == initial%bound){
+                        vLine += " O |";
+                        hLine += " ---";
+                    }
+                    else {
+                        vLine += "   |";
+                        hLine += " ---";
+                    }
                 }
                 else if(maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
-                    vLine += "    ";
-                    hLine += " ---";
+                    if(i == initial/bound && j == initial%bound){
+                        vLine += " O  ";
+                        hLine += " ---";
+                    }
+                    else {
+                        vLine += "    ";
+                        hLine += " ---";
+                    }
                }
                 else if(!maze.getHorizontal().getBlocks()[i][j] && maze.getVertical().getBlocks()[i][j]) {
-                    vLine += "   |";
-                    hLine += "    ";
+                    if(i == initial/bound && j == initial%bound){
+                        vLine += " O |";
+                        hLine += "    ";
+                    }
+                    else {
+                        vLine += "   |";
+                        hLine += "    ";
+                    }
                 }
                 else if(!maze.getHorizontal().getBlocks()[i][j] && !maze.getVertical().getBlocks()[i][j]) {
-                    vLine += "    ";
-                    hLine += "    ";
+                    if(i == initial/bound && j == initial%bound){
+                        vLine += " O  ";
+                        hLine += "    ";
+                    }
+                    else {
+                        vLine += "    ";
+                        hLine += "    ";
+                    }
                 }
 
             }

@@ -8,13 +8,17 @@ public class MazeToTheMax {
 
     private int bound;
     private int levelNum;
-    private boolean pass = true;
+    private boolean pass = false;
     private Random r = new Random();
     private Maze level;
+    private String move;
+    private Scanner sc = new Scanner(System.in);
+
 
     public MazeToTheMax(){
         levelNum = 1;
         bound = 2;
+        move = "";
         levelUp();
     }
 
@@ -29,7 +33,7 @@ public class MazeToTheMax {
 * to help with the lag when finding solvable mazes of large bounds
 * */
     public void levelUp(){//dictates maze bounds or level
-        while(pass && bound<10){
+        while(bound<10){
             System.out.println("THIS IS LEVEL " + levelNum + "!!!");
             System.out.println("bound: " + bound);
             level = new Maze(bound);
@@ -42,6 +46,34 @@ public class MazeToTheMax {
                 solvable = level.solvable();
             }
             level.displayMaze();
+
+            while(!pass){
+                System.out.println("use commands a(left), d(right), w(up), and s(down)");
+                move = sc.next();
+                switch (move){
+                    case "a":
+                        pass = level.play(-1);
+                        break;
+                    case "s":
+                        pass = level.play(bound);
+                        break;
+                    case "d":
+                        pass = level.play(1);
+                        break;
+                    case "w":
+                        pass = level.play(-bound);
+                        break;
+                    default:
+                        System.out.println("sorry that isn't an input option");
+                        pass = false;
+                        break;
+                }
+                level.displayMaze();
+            }
+
+            System.out.println("yeet boi");
+
+            pass = false;
             levelNum++;
             bound++;
         }
